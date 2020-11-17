@@ -40,10 +40,12 @@ recae sobre el controlador.
 
 def init():
     """
-    Llama la funcion de inicializacion del modelo.
+    Llama la funcion de inicializacion  del modelo.
     """
+    # catalog es utilizado para interactuar con el modelo
+    analyzer = model.newAnalyzer()
+    return analyzer
 
-    return None
 
 
 # ___________________________________________________
@@ -55,9 +57,75 @@ def loadData(analyzer, accidentsfile):
     """
     Carga los datos de los archivos CSV en el modelo
     """
-    
+    accidentsfile = cf.data_dir + accidentsfile
+    input_file = csv.DictReader(open(accidentsfile, encoding="utf-8"),
+                                delimiter=",")
+
+    for accident in input_file:
+        model.addaccident(analyzer, accident)
+ 
     return analyzer
 
 # ___________________________________________________
 #  Funciones para consultas
 # ___________________________________________________
+def size(analyzer):
+    return model.size(analyzer)
+
+
+def getAccident(tree, key):
+    return model.getaccident(tree, key)
+
+def getAccidentbyrange(tree,minkey,maxkey):
+    return model.getaccidentrange(tree,minkey,maxkey)
+
+
+def getaccidentbyhourrange (tree,minkey,maxkey):
+    return model.getaccidenthourrange(tree,minkey,maxkey)
+
+
+def getStateMoreAccidentsByRange(analyzer,initialDate, finalDate):
+    return model.getStateMoreAccidentsByRange(analyzer,initialDate, finalDate)   
+
+
+def getDateMoreAccidentsByRange(analyzer,initialDate, finalDate):
+    return model.getDateMoreAccidentsByRange(analyzer,initialDate, finalDate)
+
+
+def getAccidentsGeographicalArea (analyzer,LatC,LongC,radio):
+    return model.getAccidentsGeographicalArea (analyzer,LatC,LongC,radio)
+
+
+def keyset (map):
+    return model.keyset(map)
+
+
+def indexHeight(analyzer):
+    """
+    Altura del indice (arbol)
+    """
+    return model.indexHeight(analyzer)
+
+
+def indexSize(analyzer):
+    """
+    Numero de nodos en el arbol
+    """
+    return model.indexSize(analyzer)
+
+
+def minKey(analyzer):
+    """
+    La menor llave del arbol
+    """
+    return model.minKey(analyzer)
+
+
+def maxKey(analyzer):
+    """
+    La mayor llave del arbol
+    """
+    return model.maxKey(analyzer)
+
+
+
