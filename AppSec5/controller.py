@@ -36,28 +36,97 @@ recae sobre el controlador.
 # ___________________________________________________
 #  Inicializacion del catalogo
 # ___________________________________________________
-
-
 def init():
     """
     Llama la funcion de inicializacion del modelo.
     """
-
-    return None
-
-
+    analyzer = model.newAnalyzer()
+    return analyzer
 # ___________________________________________________
 #  Funciones para la carga de datos y almacenamiento
 #  de datos en los modelos
 # ___________________________________________________
-
-def loadData(analyzer, accidentsfile):
+def loadData(analyzer, accidents_file):
     """
     Carga los datos de los archivos CSV en el modelo
     """
-    
+    accidents_file = cf.data_dir + accidents_file
+    input_file = csv.DictReader(open(accidents_file, encoding="utf-8"),
+                                delimiter=",")
+    for accidente in input_file:
+        model.addaccidente(analyzer, accidente)
     return analyzer
-
 # ___________________________________________________
 #  Funciones para consultas
 # ___________________________________________________
+def accidentesSize(analyzer):
+    """
+    Numero de accidentes leidos
+    """
+    return model.accidentesSize(analyzer)
+
+def indexHeight(analyzer):
+    """
+    Altura del indice (arbol)
+    """
+    return model.indexHeight(analyzer)
+
+def minKey(analyzer):
+
+    return model.minKey(analyzer)
+
+
+def getAccidentsByRange2(analyzer, initialDate, finalDate):
+    initialDate = datetime.datetime.strptime(initialDate, '%Y-%m-%d')
+    finalDate = datetime.datetime.strptime(finalDate, '%Y-%m-%d')
+    return model.getAccidentsByRange2(analyzer, initialDate.date(),finalDate.date())
+
+
+def getaccidentesByRangeCode(analyzer, StartDate, severity):
+    """
+    Retorna el total de accidentes de un tipo especifico en una
+    fecha determinada
+    """
+    StartDate = datetime.datetime.strptime(StartDate, '%Y-%m-%d')
+    return model.getaccidentesByRangeCode(analyzer, StartDate.date(), severity)
+
+def getAccidentsByRange(analyzer, initialDate, finalDate):
+    """
+    Retorna el total de crimenes en un rango de fechas
+    """
+    initialDate= datetime.datetime.strptime(initialDate, "%Y-%m-%d")
+    finalDate = datetime.datetime.strptime(finalDate, '%Y-%m-%d')
+    return model.getAccidentsByRange(analyzer, initialDate.date(),finalDate.date())
+
+def getAccidentsByRangeHour(analyzer, initialDate, finalDate):
+    """
+    Retorna el total de crimenes en un rango de fechas
+    """
+    initialDate= datetime.time(hour=int(initialDate[0]),minute=int(initialDate[1]),second=59)
+    finalDate = datetime.time(hour=int(finalDate[0]),minute=int(finalDate[1]),second=59)
+    return model.getAccidentsByRangeHour(analyzer, initialDate,finalDate)
+
+def getAccidentsByRangeState(analyzer, initialDate, finalDate):
+    """
+    Retorna el total de crimenes en un rango de fechas
+    """
+    initialDate= datetime.datetime.strptime(initialDate, "%Y-%m-%d")
+    finalDate = datetime.datetime.strptime(finalDate, '%Y-%m-%d')
+    return model.getAccidentsByState(analyzer, initialDate.date(),finalDate.date())
+
+def getAccidentsBeforeDate (analyzer, finalDate):
+    final = datetime.datetime.strptime(finalDate, '%Y-%m-%d')
+    finalDate = final.date()
+    model.getAccidentsBeforeDate(analyzer, finalDate)
+
+def getaccidentesByDistance(analyzer,lon,lat,R):
+    
+    return model.getAccidentsByDistance(analyzer,lon,lat,R)
+
+def getsizeaccidentes(analyzer):
+    return model.accidentesSize(analyzer)
+
+def getInitialDate(analyzer):
+    initialDate=model.minKey(analyzer)
+    initialDate=str(initialDate.strftime("%Y-%m-%d"))
+    return initialDate
